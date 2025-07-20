@@ -39,7 +39,7 @@ def _parse_arguments():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         prog=os.path.basename(__file__),
-        description="Extract CS2 build number from engine2.dll (or any executable when --all).",
+        description="Extract build number from GoldSrc/Source2 executables.",
     )
 
     parser.add_argument(
@@ -250,7 +250,7 @@ month_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 def build_number(date_utf8):  # expected 9842 for 'Oct  5 2023'
     """
-    converts a date-like string into a cs2-like build number.
+    converts a date-like string into a goldsrc/source2-like build number.
     expects date_utf8 to be MMM DD YYYY
     """
 
