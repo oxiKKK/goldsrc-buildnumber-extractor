@@ -70,7 +70,18 @@ def _gather_files(paths):
 
     candidate_files = []
 
-    for p in paths:
+    # Normalize incoming paths so that separators like '\\' or mixed usage are
+    # handled consistently across platforms. This also transparently converts
+    # paths such as "C:\\some\\dir\\" and "C:/some/dir/" to the canonical
+    # representation expected by os.path utilities.
+
+    for raw_path in paths:
+        # On Windows, a trailing backslash in a quoted path argument escapes
+        # the closing quote. This results in the argument being passed with a
+        # literal quote at the end (e.g., "C:\path\" -> C:\path").
+        # We strip any trailing quotes to handle this common shell issue.
+        p = os.path.normpath(raw_path.rstrip('"'))
+
         if os.path.isfile(p):
             if _is_executable(p):
                 candidate_files.append(p)
@@ -81,7 +92,7 @@ def _gather_files(paths):
                     if _is_executable(fpath):
                         candidate_files.append(fpath)
         else:
-            print(f"warning: path '{p}' is not a valid file or directory, skipping.")
+            print(f"warning: path '{raw_path}' is not a valid file or directory, skipping.")
 
     return candidate_files
 
